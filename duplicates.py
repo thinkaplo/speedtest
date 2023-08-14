@@ -1,17 +1,17 @@
 import os
 import time
-import polars as pl
+from functions import *
 
 load_results = []
 transformation_results = []
 writing_results = []
 
 # --------------------------------------------------------- START EXPERIMENT 
-for i in range (0,2):
+for i in range (0,100):
 # --------------------------------------------------------- LOADING 
     start_load = time.monotonic()
     
-    file = pl.read_csv('input/SyntheticFinancial1%.csv')
+    file = read_csv('input/SyntheticFinancial1%.csv')
     
     end_load = time.monotonic()
     
@@ -21,9 +21,16 @@ for i in range (0,2):
 # --------------------------------------------------------- TRANSFORMATION 
     start_transformation = time.monotonic()
     
-    file = file.with_columns(pl.col('type').apply(lambda x : x[::-1]).alias('Text'))
-    file = file.with_columns(pl.when(pl.col('amount')>1000).then(pl.lit('More than a thousand')).otherwise(pl.lit('Less than a thousand')).alias('Conditional'))    
-    file = file.with_columns((pl.col('newbalanceOrig') - pl.col('oldbalanceOrg')).alias('Arithmetic'))
+    add_col(file,'Text')
+    add_col(file,'Conditional')
+    add_col(file,'Arithmetic')
+    for i in file:
+        i['Text'] = i['type'][::-1]
+        i['Arithmetic'] = float(i['newbalanceOrig'])-float(i['oldbalanceOrg'])
+        if float(i['amount']) > 1000:
+            i['Conditional'] = 'More than a thousand'
+        else:
+            i['Conditional'] = 'Less than a thousand'
 
     end_transformation = time.monotonic()
     
@@ -33,7 +40,7 @@ for i in range (0,2):
 # --------------------------------------------------------- WRITING 
     start_writing = time.monotonic()
 
-    file.write_csv('output/method_polars.csv')
+    write_csv('output/method_csv.csv',file)
     
     end_writing = time.monotonic()
 
@@ -41,10 +48,12 @@ for i in range (0,2):
     writing_results.append(writing_result)
 
 # --------------------------------------------------------- CLEAN FOR NEW CYCLE 
-    os.remove('output/method_polars.csv')
+    os.remove('output/method_csv.csv')
     file = []
 # --------------------------------------------------------- WRITE RESULTS
-f = open('results/polars_result.txt','a')
-f.write('''{'Load':'''+str(load_results)+''','Transformation':'''+str(transformation_results)+''','Writing':'''+str(writing_results)+'}')
+f = open('results/csv_result.txt','a')
+f.write('''{'load':'''+str(load_results)+''','Transformation':'''+str(transformation_results)+''','Writing':'''+str(writing_results)+'}')
 f.close()    
 # --------------------------------------------------------- END EXPERIMENT 
+
+

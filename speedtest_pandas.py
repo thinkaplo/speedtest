@@ -7,11 +7,11 @@ transformation_results = []
 writing_results = []
 
 # --------------------------------------------------------- START EXPERIMENT 
-for i in range (0,10):
+for i in range (0,2):
 # --------------------------------------------------------- LOADING 
     start_load = time.monotonic()
     
-    file = pd.read_csv('input/SyntheticFinancial.csv')
+    file = pd.read_csv('input/SyntheticFinancial1%.csv')
     
     end_load = time.monotonic()
     
@@ -46,13 +46,6 @@ for i in range (0,10):
     file = []
 # --------------------------------------------------------- WRITE RESULTS
 f = open('results/pandas_result.txt','a')
-f.write('Load results: \n')
-f.write(str(load_results))
-f.write('\n'*2)
-f.write('Transformation results: \n')
-f.write(str(transformation_results))
-f.write('\n'*2)
-f.write('Writing results: \n')
-f.write(str(writing_results))
+f.write('''{'Load':'''+str(load_results)+''','Transformation':'''+str(transformation_results)+''','Writing':'''+str(writing_results)+'}')
 f.close()    
 # --------------------------------------------------------- END EXPERIMENT 
