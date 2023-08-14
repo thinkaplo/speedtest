@@ -6,9 +6,12 @@ load_results = []
 transformation_results = []
 writing_results = []
 
+list_of_dicts = []
+
 # --------------------------------------------------------- START EXPERIMENT 
-for i in range (0,100):
+for i in range (0,3):
 # --------------------------------------------------------- LOADING 
+    row = {}
     start_load = time.monotonic()
     
     file = read_csv('input/SyntheticFinancial1%.csv')
@@ -17,7 +20,7 @@ for i in range (0,100):
     
     load_result = end_load - start_load
     load_results.append(load_result)
-
+    row['Load'] = load_result
 # --------------------------------------------------------- TRANSFORMATION 
     start_transformation = time.monotonic()
     
@@ -36,7 +39,7 @@ for i in range (0,100):
     
     transformation_result = end_transformation - start_transformation 
     transformation_results.append(transformation_result)   
-
+    row['Transformation'] = transformation_result
 # --------------------------------------------------------- WRITING 
     start_writing = time.monotonic()
 
@@ -46,14 +49,14 @@ for i in range (0,100):
 
     writing_result = end_writing - start_writing
     writing_results.append(writing_result)
-
+    row['Writing']=writing_result
 # --------------------------------------------------------- CLEAN FOR NEW CYCLE 
     os.remove('output/method_csv.csv')
     file = []
+    list_of_dicts.append(row)
 # --------------------------------------------------------- WRITE RESULTS
 f = open('results/csv_result.txt','a')
 f.write('''{'load':'''+str(load_results)+''','Transformation':'''+str(transformation_results)+''','Writing':'''+str(writing_results)+'}')
 f.close()    
 # --------------------------------------------------------- END EXPERIMENT 
-
-
+write_csv('results/test.csv',list_of_dicts)

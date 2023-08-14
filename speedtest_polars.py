@@ -1,14 +1,13 @@
 import os
 import time
 import polars as pl
+from functions import *
 
-load_results = []
-transformation_results = []
-writing_results = []
-
+results = []
 # --------------------------------------------------------- START EXPERIMENT 
-for i in range (0,2):
+for i in range (0,100):
 # --------------------------------------------------------- LOADING 
+    row = {}
     start_load = time.monotonic()
     
     file = pl.read_csv('input/SyntheticFinancial1%.csv')
@@ -16,7 +15,7 @@ for i in range (0,2):
     end_load = time.monotonic()
     
     load_result = end_load - start_load
-    load_results.append(load_result)
+    row['Load'] = load_result
 
 # --------------------------------------------------------- TRANSFORMATION 
     start_transformation = time.monotonic()
@@ -28,7 +27,7 @@ for i in range (0,2):
     end_transformation = time.monotonic()
     
     transformation_result = end_transformation - start_transformation 
-    transformation_results.append(transformation_result)   
+    row['Transformation'] = transformation_result   
 
 # --------------------------------------------------------- WRITING 
     start_writing = time.monotonic()
@@ -38,13 +37,12 @@ for i in range (0,2):
     end_writing = time.monotonic()
 
     writing_result = end_writing - start_writing
-    writing_results.append(writing_result)
+    row['Writing']=writing_result
 
 # --------------------------------------------------------- CLEAN FOR NEW CYCLE 
     os.remove('output/method_polars.csv')
     file = []
+    results.append(row)
 # --------------------------------------------------------- WRITE RESULTS
-f = open('results/polars_result.txt','a')
-f.write('''{'Load':'''+str(load_results)+''','Transformation':'''+str(transformation_results)+''','Writing':'''+str(writing_results)+'}')
-f.close()    
+write_csv('results/results_polars.csv',results) 
 # --------------------------------------------------------- END EXPERIMENT 
