@@ -5,12 +5,12 @@ from functions import *
 
 results = []
 # --------------------------------------------------------- START EXPERIMENT 
-for i in range (0,2):
+for i in range (0,250):
 # --------------------------------------------------------- LOADING 
     row = {}
     start_load = time.monotonic()
     
-    file = pd.read_csv('input/SyntheticFinancial1%.csv')
+    file = pd.read_csv('input/SyntheticFinancial.csv')
     
     end_load = time.monotonic()
     
