@@ -1,0 +1,1 @@
+python timestamp.py > Execution.txt ; python speedtest_csv.py ; python speedtest_pandas.py ; python speedtest_polars.py ; python timestamp.py >> Execution.txt
